@@ -1,0 +1,13 @@
+﻿{
+  "name" : "Фильтр объявлений в ВКонтакте",
+  "version" : "1.0.1",
+  "description" : "Позволяет фильтровать объявления выбранных пользователей",
+  "content_scripts" : [
+    {
+      "matches" : [ "http://vkontakte.ru/search*" ],
+      "js" : [ "contentscript.js" ],
+      "run_at" : "document_idle",
+      "all_frames" : false
+    }
+  ]
+}
