@@ -146,7 +146,7 @@ function PushBadUid()
     }
   }
   document.body.addEventListener('DOMNodeInserted', newElementHook, false);
-  ApplyFilter();
+  ApplyUidFilter();
   return false;
 }
 
@@ -205,12 +205,28 @@ function newElementHook(event)
 {
   //event.target - новый элемент
   //делаем наши темные делишки:)
-  ApplyFilter();
+  //alert(event.target.id);
+  if(event.target.id == 'search_more_results')
+  {
+    ApplyUidFilter(event.target);
+  }
+  else
+  {
+    ApplyUidFilter(null);
+  }
+  //ApplyRegExpFilter();
 }
 
-function ApplyFilter()
+function ApplyUidFilter(opNewNode)
 {
-  var allElements = document.getElementsByTagName("a");
+  if (opNewNode == null)
+  {
+    var allElements = document.getElementsByTagName("a");
+  }
+  else
+  {
+    var allElements = opNewNode.getElementsByTagName("a");
+  }
 
   //фильтрация по uid
   for (var i = 0; (element = allElements[i]) != null; i++)
@@ -243,8 +259,15 @@ function ApplyFilter()
       }
     }
   }
-  //фильтрация по регулярным выражениям
 }
+
+/*
+ * фильтрация по регулярным выражениям
+ */
+/*function ApplyRegExpFilter()
+{
+}*/
+
 //пробуем вешать слушателя для BODY
 try
 {
