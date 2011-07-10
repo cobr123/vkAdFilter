@@ -146,6 +146,7 @@ function PushBadUid()
     }
   }
   document.body.addEventListener('DOMNodeInserted', newElementHook, false);
+  ApplyFilter();
   return false;
 }
 
@@ -204,6 +205,11 @@ function newElementHook(event)
 {
   //event.target - новый элемент
   //делаем наши темные делишки:)
+  ApplyFilter();
+}
+
+function ApplyFilter()
+{
   var allElements = document.getElementsByTagName("a");
 
   //фильтрация по uid
@@ -238,9 +244,7 @@ function newElementHook(event)
     }
   }
   //фильтрация по регулярным выражениям
-  
 }
-
 //пробуем вешать слушателя для BODY
 try
 {
