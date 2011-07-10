@@ -2,6 +2,7 @@
 var svUserLinkClass = "mem_link";
 //var svPatt = /id\d+/i;
 var svPatt = /\/\w+$/i;
+var gbIsInProgress = 0;
 if (localStorage['gbFilter'] == null)
 {
   localStorage['gbFilter'] = 1;
@@ -28,6 +29,10 @@ ovNewOnOff.href = 'javascript:void(0)'
 ovNewOnOff.id = 'SwitchFilterOnOff'
 ovNewOnOff.onclick = SwitchFilter;
 ovNewDiv.appendChild(ovNewOnOff);
+// новый элемент
+var ovLoaderDiv = document.createElement('div');
+ovLoaderDiv.id = 'MyLoaderDiv';
+ovSummary.appendChild(ovLoaderDiv);
 
 /*
  * Включает \ выключает фильтрование объявлений
@@ -203,18 +208,20 @@ function AddFilterButton(opElem, bpFlag)
 */
 function newElementHook(event)
 {
-  //event.target - новый элемент
-  //делаем наши темные делишки:)
-  //alert(event.target.id);
-  if(event.target.id == 'search_more_results')
-  {
-    ApplyUidFilter(event.target);
-  }
-  else
-  {
-    ApplyUidFilter(null);
-  }
-  //ApplyRegExpFilter();
+      //document.body.removeEventListener('DOMNodeInserted', newElementHook, false);
+    //event.target - новый элемент
+    //делаем наши темные делишки:)
+    //alert(event.target.getElementsByTagName("a").length);
+    if(event.target.id == 'search_more_results')
+    {
+      ApplyUidFilter(event.target);
+    }
+    else
+    {
+      ApplyUidFilter(null);
+    }
+      //document.body.addEventListener('DOMNodeInserted', newElementHook, false);
+      return true;
 }
 
 function ApplyUidFilter(opNewNode)
@@ -227,17 +234,21 @@ function ApplyUidFilter(opNewNode)
   {
     var allElements = opNewNode.getElementsByTagName("a");
   }
-
+   // var allElements = document.getElementsByTagName("a");
+  var nvFiltered = 0;
+  var nvCanBeFiltered = 0;
   //фильтрация по uid
   for (var i = 0; (element = allElements[i]) != null; i++)
   {
     if (element.className == svUserLinkClass)
     {
+      nvCanBeFiltered++;
       var svHref = element.href;
       var svId = String(svHref.match(svPatt)).substr(1);
       //alert(svHref.match(svPatt))
       if (avBadId.inArray(svId))
       {
+        nvFiltered++;
         if (gbFilter == 1)
         {
           //если фильтр включен, то прячем div
@@ -257,6 +268,19 @@ function ApplyUidFilter(opNewNode)
         //если id не найден, то добавляем кнопку "фильтровать"
         AddFilterButton(element, true);
       }
+    }
+  }
+  var ovLoader = document.getElementById("MyLoaderDiv");
+  if(nvFiltered == nvCanBeFiltered)
+  {
+    if(ovLoader.innerHTML.length % 100 == 0) 
+    {
+      if(ovLoader.innerHTML.length / 100 = 1) alert('загружаю, пожалуйста подождите');
+      ovLoader.innerHTML += '<br>';      
+    }
+    else
+    {
+      ovLoader.innerHTML += '.';
     }
   }
 }
